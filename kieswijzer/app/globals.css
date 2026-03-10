@@ -1,26 +1,141 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --indigo: #20126E;
+  --fuchsia: #DC1E50;
+  --aqua: #47D7AC;
+  --white: #FFFFFF;
+  --lightgray: #F4F4F4;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-open-sans), 'Open Sans', sans-serif;
+  color: #20126E;
+}
+
+.btn-primary {
+  background-color: #DC1E50;
+  color: white;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary:hover {
+  background-color: #b01840;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(220, 30, 80, 0.3);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: #20126E;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  border: 2px solid #20126E;
+  transition: all 0.2s;
+}
+.btn-secondary:hover {
+  background-color: #20126E;
+  color: white;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 8px rgba(32, 18, 110, 0.08);
+}
+
+.progress-bar-bg {
+  background-color: #e0e0e0;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  background-color: #DC1E50;
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+input[type="text"]:focus {
+  border-color: #20126E;
+}
+
+.option-btn {
+  width: 100%;
+  text-align: left;
+  padding: 16px 20px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  background: white;
+  cursor: pointer;
+  font-size: 15px;
+  font-family: inherit;
+  color: #20126E;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.option-btn:hover {
+  border-color: #DC1E50;
+  background-color: #fff5f7;
+}
+.option-btn.selected {
+  border-color: #DC1E50;
+  background-color: #fff5f7;
+  font-weight: 600;
+}
+.option-btn .option-letter {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #F4F4F4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.option-btn.selected .option-letter {
+  background-color: #DC1E50;
+  color: white;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fadeIn 0.3s ease forwards;
 }
