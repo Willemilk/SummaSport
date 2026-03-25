@@ -8,11 +8,7 @@ type Profiel = "TC" | "BSC" | "LC" | "BC";
 interface Vraag {
   id: number;
   vraag: string;
-  opties: {
-    letter: string;
-    tekst: string;
-    profiel: Profiel;
-  }[];
+  opties: { letter: string; tekst: string; profiel: Profiel }[];
 }
 
 const vragen: Vraag[] = [
@@ -121,19 +117,19 @@ const vragen: Vraag[] = [
     vraag: "Hoe reageer jij als iemand moeite heeft met bewegen of sport?",
     opties: [
       { letter: "A", tekst: "Ik analyseer de techniek en maak een verbeterplan", profiel: "TC" },
-      { letter: "B", tekst: "Ik zoek manieren om drempels weg te halen en iedereen mee te laten doen", profiel: "BSC" },
+      { letter: "B", tekst: "Ik zoek manieren om drempels weg te halen", profiel: "BSC" },
       { letter: "C", tekst: "Ik ga in gesprek over motivatie en onderliggende leefstijl", profiel: "LC" },
-      { letter: "D", tekst: "Ik pas de activiteit aan op hun mogelijkheden en tempo", profiel: "BC" },
+      { letter: "D", tekst: "Ik pas de activiteit aan op hun mogelijkheden", profiel: "BC" },
     ],
   },
   {
     id: 12,
-    vraag: "Als jij over 5 jaar terugkijkt op je werk, wat wil je dan gezegd hebben bereikt?",
+    vraag: "Als je over 5 jaar terugkijkt, wat wil je bereikt hebben?",
     opties: [
-      { letter: "A", tekst: "Ik heb meerdere sporters naar een hoger niveau geholpen", profiel: "TC" },
-      { letter: "B", tekst: "Ik heb sport in mijn wijk toegankelijk gemaakt voor iedereen", profiel: "BSC" },
-      { letter: "C", tekst: "Ik heb tientallen mensen geholpen hun leefstijl te verbeteren", profiel: "LC" },
-      { letter: "D", tekst: "Ik heb kwetsbare mensen meer kwaliteit van leven gegeven", profiel: "BC" },
+      { letter: "A", tekst: "Meerdere sporters naar een hoger niveau geholpen", profiel: "TC" },
+      { letter: "B", tekst: "Sport in mijn wijk toegankelijk gemaakt voor iedereen", profiel: "BSC" },
+      { letter: "C", tekst: "Tientallen mensen geholpen hun leefstijl te verbeteren", profiel: "LC" },
+      { letter: "D", tekst: "Kwetsbare mensen meer kwaliteit van leven gegeven", profiel: "BC" },
     ],
   },
 ];
@@ -143,7 +139,7 @@ export default function KieswijzerClient({ studentnummer }: { studentnummer: str
   const [huidigeVraag, setHuidigeVraag] = useState(0);
   const [antwoorden, setAntwoorden] = useState<Record<number, Profiel>>({});
   const [geselecteerd, setGeselecteerd] = useState<Profiel | null>(null);
-  const [animating, setAnimating] = useState(false);
+  const [animKey, setAnimKey] = useState(0);
 
   useEffect(() => {
     setGeselecteerd(antwoorden[huidigeVraag] || null);
@@ -159,13 +155,9 @@ export default function KieswijzerClient({ studentnummer }: { studentnummer: str
     setAntwoorden(nieuweAntwoorden);
 
     if (huidigeVraag < vragen.length - 1) {
-      setAnimating(true);
-      setTimeout(() => {
-        setHuidigeVraag(huidigeVraag + 1);
-        setAnimating(false);
-      }, 200);
+      setAnimKey((k) => k + 1);
+      setHuidigeVraag(huidigeVraag + 1);
     } else {
-      // Bereken resultaten
       const scores: Record<Profiel, number> = { TC: 0, BSC: 0, LC: 0, BC: 0 };
       Object.values(nieuweAntwoorden).forEach((p) => scores[p]++);
       const totaal = vragen.length;
@@ -182,62 +174,67 @@ export default function KieswijzerClient({ studentnummer }: { studentnummer: str
 
   const handleTerug = () => {
     if (huidigeVraag > 0) {
+      setAnimKey((k) => k + 1);
       setHuidigeVraag(huidigeVraag - 1);
     } else {
-      router.push(`/?student=${studentnummer}`);
+      router.push("/");
     }
   };
 
   const vraag = vragen[huidigeVraag];
   const voortgang = ((huidigeVraag) / vragen.length) * 100;
+  const beantwoord = Object.keys(antwoorden).length;
 
   return (
-    <div style={{ maxWidth: '680px', margin: '0 auto', padding: '32px 16px' }}>
-      {/* Header info */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <span style={{ fontSize: '13px', color: '#20126E', fontWeight: 600, opacity: 0.6 }}>
-          Studentnummer: {studentnummer || '—'}
+    <div style={{ maxWidth: '680px', margin: '0 auto', padding: '32px 20px 64px' }}>
+      {/* Top bar */}
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: '12px',
+      }}>
+        <span style={{ fontSize: '13px', color: '#20126E', fontWeight: 600, opacity: 0.5 }}>
+          {studentnummer}
         </span>
-        <span style={{ fontSize: '13px', color: '#20126E', fontWeight: 700 }}>
+        <span style={{
+          fontSize: '14px',
+          fontWeight: 800,
+          color: '#DC1E50',
+        }}>
           {huidigeVraag + 1} / {vragen.length}
         </span>
       </div>
 
-      {/* Progress bar */}
+      {/* Progress */}
       <div className="progress-bar-bg" style={{ marginBottom: '32px' }}>
         <div className="progress-bar-fill" style={{ width: `${voortgang}%` }} />
       </div>
 
       {/* Question card */}
-      <div className="card fade-in" key={huidigeVraag} style={{ opacity: animating ? 0 : 1, transition: 'opacity 0.2s' }}>
-        <div style={{ marginBottom: '8px' }}>
-          <span style={{
-            backgroundColor: '#20126E',
-            color: 'white',
-            padding: '2px 10px',
-            borderRadius: '4px',
-            fontSize: '12px',
-            fontWeight: 700
-          }}>
+      <div className="card scale-in" key={animKey} style={{ marginBottom: '24px' }}>
+        <div style={{ marginBottom: '12px' }}>
+          <span className="badge badge-indigo">
             Vraag {huidigeVraag + 1}
           </span>
         </div>
+
         <h2 style={{
-          color: '#20126E',
-          fontSize: '22px',
-          fontWeight: 800,
+          fontFamily: "'Bitter', serif",
+          fontSize: '24px',
+          fontWeight: 700,
           lineHeight: 1.3,
-          marginBottom: '24px',
-          marginTop: '12px'
+          marginBottom: '28px',
+          color: '#20126E',
         }}>
           {vraag.vraag}
         </h2>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }} className="stagger">
           {vraag.opties.map((optie) => (
             <button
               key={optie.letter}
-              className={`option-btn ${geselecteerd === optie.profiel ? 'selected' : ''}`}
+              className={`option-btn fade-in-up ${geselecteerd === optie.profiel ? 'selected' : ''}`}
               onClick={() => handleKeuze(optie.profiel)}
             >
               <span className="option-letter">{optie.letter}</span>
@@ -247,40 +244,58 @@ export default function KieswijzerClient({ studentnummer }: { studentnummer: str
         </div>
 
         {/* Navigation */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '28px', gap: '12px' }}>
-          <button className="btn-secondary" onClick={handleTerug} style={{ fontSize: '14px', padding: '10px 20px' }}>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginTop: '32px',
+          gap: '12px',
+        }}>
+          <button className="btn-ghost" onClick={handleTerug}>
             ← Terug
           </button>
           <button
             className="btn-primary"
             onClick={handleVolgende}
             disabled={!geselecteerd}
-            style={{
-              opacity: geselecteerd ? 1 : 0.4,
-              cursor: geselecteerd ? 'pointer' : 'not-allowed',
-              fontSize: '14px',
-              padding: '10px 24px'
-            }}
+            style={{ fontSize: '15px' }}
           >
             {huidigeVraag === vragen.length - 1 ? 'Bekijk resultaat →' : 'Volgende →'}
           </button>
         </div>
       </div>
 
-      {/* Answered dots */}
-      <div style={{ display: 'flex', gap: '6px', justifyContent: 'center', marginTop: '24px', flexWrap: 'wrap' }}>
+      {/* Question dots */}
+      <div style={{
+        display: 'flex',
+        gap: '6px',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+      }}>
         {vragen.map((_, i) => (
           <div
             key={i}
             style={{
-              width: '8px',
+              width: i === huidigeVraag ? '24px' : '8px',
               height: '8px',
-              borderRadius: '50%',
-              backgroundColor: i === huidigeVraag ? '#DC1E50' : antwoorden[i] ? '#20126E' : '#e0e0e0',
-              transition: 'background-color 0.2s',
+              borderRadius: '4px',
+              backgroundColor:
+                i === huidigeVraag ? '#DC1E50'
+                : antwoorden[i] ? '#20126E'
+                : '#E0DCF0',
+              transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
           />
         ))}
+      </div>
+
+      {/* Stats line */}
+      <div style={{
+        textAlign: 'center',
+        marginTop: '16px',
+        fontSize: '12px',
+        color: '#B8B4C8',
+      }}>
+        {beantwoord} van {vragen.length} beantwoord
       </div>
     </div>
   );

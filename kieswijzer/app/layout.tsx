@@ -9,25 +9,86 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="nl">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
-      </head>
-      <body style={{fontFamily: "'Open Sans', sans-serif"}}>
+      <body>
         <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-          <header style={{backgroundColor: '#20126E', color: 'white', padding: '12px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', boxShadow: '0 2px 8px rgba(32,18,110,0.2)'}}>
-            <div style={{display: 'flex', alignItems: 'center', gap: '12px'}}>
-              <span style={{fontWeight: 900, fontSize: '22px', letterSpacing: '2px', fontFamily: "'Open Sans', sans-serif"}}>SUMMA</span>
-              <span style={{backgroundColor: '#DC1E50', color: 'white', padding: '2px 10px', borderRadius: '4px', fontSize: '12px', fontWeight: 700, letterSpacing: '1px'}}>
+          {/* ===== HEADER ===== */}
+          <header style={{
+            backgroundColor: '#20126E',
+            color: 'white',
+            padding: '0 28px',
+            height: '64px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            position: 'sticky',
+            top: 0,
+            zIndex: 50,
+            boxShadow: '0 2px 12px rgba(32,18,110,0.25)',
+          }}>
+            <a href="/" style={{ display: 'flex', alignItems: 'center', gap: '10px', textDecoration: 'none', color: 'white' }}>
+              {/* SUMMA wordmark */}
+              <svg width="110" height="28" viewBox="0 0 110 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <text x="0" y="23" fill="white" fontFamily="'Open Sans', sans-serif" fontWeight="900" fontSize="26" letterSpacing="1.5">SUMMA</text>
+              </svg>
+              {/* School badge - Summa Sport uses fuchsia */}
+              <span style={{
+                backgroundColor: '#DC1E50',
+                color: 'white',
+                padding: '3px 12px',
+                borderRadius: '6px',
+                fontSize: '11px',
+                fontWeight: 700,
+                letterSpacing: '0.08em',
+                textTransform: 'lowercase',
+              }}>
                 sport
               </span>
-            </div>
-            <span style={{fontSize: '12px', opacity: 0.5}}>Kieswijzer Prototype</span>
+            </a>
+            <nav style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <a href="/" style={{
+                color: 'rgba(255,255,255,0.7)',
+                fontSize: '13px',
+                fontWeight: 600,
+                textDecoration: 'none',
+                padding: '6px 14px',
+                borderRadius: '100px',
+                transition: 'all 0.2s',
+              }}>
+                Kieswijzer
+              </a>
+              <a href="/admin" style={{
+                color: 'rgba(255,255,255,0.7)',
+                fontSize: '13px',
+                fontWeight: 600,
+                textDecoration: 'none',
+                padding: '6px 14px',
+                borderRadius: '100px',
+                transition: 'all 0.2s',
+              }}>
+                Docenten
+              </a>
+            </nav>
           </header>
-          <main style={{flex: 1, backgroundColor: '#F4F4F4'}}>{children}</main>
-          <footer style={{backgroundColor: '#20126E', color: 'rgba(255,255,255,0.4)', fontSize: '12px', textAlign: 'center', padding: '12px'}}>
-            Summa Sport · Kieswijzer Prototype · Summa ICT 2025/26
+
+          {/* ===== MAIN ===== */}
+          <main style={{ flex: 1, backgroundColor: '#FAFAFE' }}>
+            {children}
+          </main>
+
+          {/* ===== FOOTER ===== */}
+          <footer style={{
+            backgroundColor: '#20126E',
+            color: 'rgba(255,255,255,0.35)',
+            fontSize: '12px',
+            textAlign: 'center',
+            padding: '20px 24px',
+          }}>
+            <div style={{ marginBottom: '4px' }}>
+              <span style={{ fontWeight: 700, color: 'rgba(255,255,255,0.5)' }}>SUMMA</span>
+              <span style={{ margin: '0 8px', opacity: 0.3 }}>·</span>
+              <span>samen kun je meer</span>
+            </div>
+            <div>Kieswijzer Summa Sport · Summa ICT 2025/26</div>
           </footer>
         </div>
       </body>
